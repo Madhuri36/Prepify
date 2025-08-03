@@ -10,14 +10,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SideBarOptions } from "@/utils/Constants";
+import { SideBarOptions } from "@/constants/Constants";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/userDetails";
 
 export default function AppSidebar() {
-  const path=usePathname();
+  const path = usePathname();
+  const { user, loading, getUsername, getEmail } = useAuth();
+
   console.log("Current Path:", path);
+
   return (
     <Sidebar>
       {/* Header Section */}
@@ -50,10 +54,12 @@ export default function AppSidebar() {
           <SidebarMenu>
             {SideBarOptions.map((option, index) => (
               <SidebarMenuItem key={index} className="p-1">
-                <SidebarMenuButton asChild className={`p-5 ${path==option.path && 'bg-[#DDDFFF]'}`}>
+                <SidebarMenuButton asChild className={`p-5 ${path == option.path && 'bg-[#DDDFFF]'}`}>
                   <Link href={option.path} className="flex items-center gap-2">
-                    <option.icon className={`h-5 w-5 ${path==option.path&&'text-primary'}`} />
-                    <span className={`text-[16px] font-medium ${path==option.path&&'text-primary'}`}>{option.name}</span>
+                    <option.icon className={`h-5 w-5 ${path == option.path && 'text-primary'}`} />
+                    <span className={`text-[16px] font-medium ${path == option.path && 'text-primary'}`}>
+                      {option.name}
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -61,9 +67,33 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-
-      {/* Footer (Optional) */}
-      <SidebarFooter />
+      <SidebarFooter>
+        <div className="p-3 border-t">
+          {loading ? (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 rounded animate-pulse mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-[#DDDFFF] text-lg font-bold text-primary hover:cursor-pointer">
+                {getUsername().charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0 hover:cursor-pointer">
+                <p className="text-md font-medium text-gray-900 dark:text-white truncate">
+                  {getUsername()}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {getEmail()}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

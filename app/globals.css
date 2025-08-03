@@ -145,3 +145,41 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .dashboard .card-cta {
+    @apply flex flex-row rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+    background: linear-gradient(to bottom, #DDDFFF, #FFFFFF);
+    color: #1f1f1f;
+  }
+
+  .card-border {
+    @apply border-gradient p-0.5 rounded-2xl w-fit;
+  }
+
+  /* .card-interviewer {
+      @apply flex-center flex-col gap-2 p-7 h-[400px] blue-gradient-dark rounded-lg border-2 border-primary-200/50 flex-1 sm:basis-1/2 w-full;
+    }
+
+  .card-content {
+      @apply flex flex-col gap-2 justify-center items-center p-7 dark-gradient rounded-2xl min-h-full;
+    } */
+  .card-interview {
+    @apply bg-gray-700 rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
+  }
+
+  .badge-text {
+      @apply text-sm font-semibold capitalize text-white;
+    }
+  .btn-primary {
+    @apply w-fit bg-primary !text-white hover:bg-primary !rounded-full !font-bold px-5 cursor-pointer min-h-10;
+  }
+  .tech-tooltip {
+    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-500  rounded-md shadow-md;
+  }
+}
+@utility border-gradient {
+  @apply bg-gradient-to-b from-[#DDDFFF] to-[FFFFFF];
+}
+
+

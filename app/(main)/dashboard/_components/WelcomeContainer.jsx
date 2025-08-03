@@ -1,49 +1,38 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import { getUser } from '@/app/actions/auth';
+import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
 function WelcomeContainer() {
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchUserData() {
-      const { user, error } = await getUser();
-
-      if (error) {
-        console.error('WelcomeContainer - Error fetching user:', error.message);
-        setLoading(false);
-        setUsername('Guest'); 
-        return;
-      }
-
-      if (user) {
-        console.log('Fetched user object in WelcomeContainer:', user);
-        console.log('User metadata in WelcomeContainer:', user.user_metadata);
-        setUsername(user.user_metadata?.username || user.email);
-      } else {
-        console.log('No user object returned from server action in WelcomeContainer.');
-        setUsername('Guest');
-      }
-      setLoading(false);
-    }
-
-    fetchUserData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div>
-        <h1>   </h1>
-      </div>
-    );
-  }
-
   return (
-    <div className='bg-white p-5 rounded-2xl w-full'>
-      <h2 className='text-lg font-bold'>Welcome Back, {username}!</h2>
-      <h2 className='text-gray-500'>AI-Powered Mock Interviews</h2>
-    </div>
-  );
+    <>
+      <section className='card-cta flex items-center justify-between gap-6 p-6'>
+        <div className='flex flex-col gap-3 w-full'>
+          <h2 className='text-2xl font-bold leading-snug text-gray-900'>
+            Get Interview-Ready <br />
+            with <span className='text-[#4F39F6]'>AI Powered Practice</span> <br />
+            and Feedback
+          </h2>
+          <p className='text-sm text-gray-600 leading-relaxed'>
+            Practice on real interview questions and receive instant feedback to improve your skills and confidence.
+          </p>
+          <Button 
+            asChild 
+            className="bg-primary text-white hover:bg-primary-dark transition-all duration-300 ease-in-out px-5 py-2 rounded-lg shadow-md hover:shadow-lg max-sm:w-full text-sm font-medium w-4/5"
+          >
+            <Link href="/interview">🚀 Start an Interview</Link>
+          </Button>
+        </div>
+        <Image 
+          src="/robo.png" 
+          alt="robot" 
+          width={900} 
+          height={400} 
+          className='max-sm:hidden' 
+        />
+      </section>
+    </>
+  )
 }
 
-export default WelcomeContainer;
+export default WelcomeContainer
