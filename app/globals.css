@@ -173,7 +173,7 @@
     @apply text-sm font-semibold capitalize;
   }
   .btn-primary {
-    @apply bg-[#4F39F6] hover:bg-[#3B2CCB] text-white font-bold rounded-full px-5 py-2 cursor-pointer transition-all duration-300;
+    @apply bg-[#4F39F6] hover:bg-[#3B2CCB] text-white font-bold px-5 py-2 cursor-pointer transition-all duration-300;
   }
   .tech-tooltip {
     @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-black bg-gray-100  rounded-md shadow-md;

@@ -52,7 +52,7 @@ function InterviewCard({ id, userId, role, type, techstack, createdAt }) {
         {/* Tech icons and button */}
         <div className="flex flex-row justify-between items-center">
           <DisplayTechIcons techStack={techstack} />
-          <Button className="btn-primary bg-[#4F39F6] hover:bg-[#3B2CCB] text-white rounded-full px-5 font-semibold transition-all duration-300">
+          <Button className="btn-primary bg-[#4F39F6] hover:bg-[#3B2CCB] text-white rounded-1/2 px-5 font-semibold transition-all duration-300">
             <Link href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}>
               {feedback ? "Check Feedback" : "View Interview"}
             </Link>
