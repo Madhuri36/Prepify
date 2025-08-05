@@ -154,7 +154,7 @@
   }
 
   .card-border {
-    @apply border-gradient p-0.5 rounded-2xl w-fit;
+    @apply bg-[#DDDFFF] p-[2px] rounded-2xl w-fit;
   }
 
   /* .card-interviewer {
@@ -169,14 +169,15 @@
   }
 
   .badge-text {
-      @apply text-sm font-semibold capitalize text-white;
-    }
+    @apply text-sm font-semibold capitalize;
+  }
   .btn-primary {
-    @apply w-fit bg-primary !text-white hover:bg-primary !rounded-full !font-bold px-5 cursor-pointer min-h-10;
+    @apply bg-[#4F39F6] hover:bg-[#3B2CCB] text-white font-bold rounded-full px-5 py-2 cursor-pointer transition-all duration-300;
   }
   .tech-tooltip {
-    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-500  rounded-md shadow-md;
+    @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-black bg-gray-100  rounded-md shadow-md;
   }
+
 }
 @utility border-gradient {
   @apply bg-gradient-to-b from-[#DDDFFF] to-[FFFFFF];

@@ -22,7 +22,7 @@ function DisplayTechIcons({ techStack }) {
         <div
           key={tech}
           className={cn(
-            'relative group bg-gray-600 rounded-full p-2 flex items-center justify-center',
+            'relative group bg-[#DDDFFF] rounded-full p-2 flex items-center justify-center',
             index >= 1 && '-ml-3'
           )}
         >
