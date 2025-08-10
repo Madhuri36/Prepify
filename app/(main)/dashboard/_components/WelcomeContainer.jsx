@@ -18,7 +18,7 @@ function WelcomeContainer() {
           </p>
           <Button 
             asChild 
-            className="bg-primary text-white hover:bg-primary-dark transition-all duration-300 ease-in-out px-5 py-2 rounded-lg shadow-md hover:shadow-lg max-sm:w-full text-sm font-medium w-4/5"
+            className="bg-primary text-white hover:bg-primary-dark transition-all duration-300 ease-in-out px-5 py-2 rounded-lg shadow-md hover:shadow-lg max-sm:w-full text-sm font-medium w-4/5 xl:w-1/3"
           >
             <Link href="/interview">🚀 Start an Interview</Link>
           </Button>
