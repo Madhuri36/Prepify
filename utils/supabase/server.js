@@ -1,9 +1,9 @@
-// utils/supabase/server.js
+// utils/supabase/server.js - Updated Server Client
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export function createClient() {
-  const cookieStore = cookies()
+export async function createClient() {
+  const cookieStore = await cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -18,6 +18,7 @@ export function createClient() {
             cookieStore.set(name, value, options)
           } catch (error) {
             // Handle the case where we can't set cookies (e.g., in middleware)
+            console.error('Failed to set cookie:', error)
           }
         },
         remove(name, options) {
@@ -25,6 +26,7 @@ export function createClient() {
             cookieStore.set(name, '', { ...options, maxAge: 0 })
           } catch (error) {
             // Handle the case where we can't remove cookies
+            console.error('Failed to remove cookie:', error)
           }
         },
       },

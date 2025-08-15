@@ -1,4 +1,3 @@
-// app/auth/signup/page.js
 "use client";
 import { z } from "zod";
 import AuthForm from "@/components/AuthForm";
@@ -27,6 +26,7 @@ export default function SignupPage() {
       if (result?.error) {
         setErrorMessage(result.error);
       }
+      // If no error, the server action will handle the redirect
     } catch (error) {
       console.error('Signup submission error:', error);
       setErrorMessage('An unexpected error occurred. Please try again.');
@@ -42,7 +42,7 @@ export default function SignupPage() {
         isSignup
       />
       {errorMessage && (
-        <div className="text-red-500 text-center mt-4">
+        <div className="text-red-500 text-center mt-4 max-w-md mx-auto">
           {errorMessage}
         </div>
       )}

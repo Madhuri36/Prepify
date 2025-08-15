@@ -1,102 +1,111 @@
-// app/actions/auth.js
-'use server';
-import { redirect } from 'next/navigation';
+// app/actions/auth.js - Server Actions for Authentication
+'use server'
+
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 export async function signUp(formData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
-  const username = formData.get('username'); 
+  const supabase = await createClient()
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
+  // Get form data
+  const data = {
+    email: formData.get('email'),
+    password: formData.get('password'),
     options: {
       data: {
-        username: username, 
-      },
-    },
-  });
-
-  if (error) {
-    console.error('Signup error:', error.message);
-    return { error: error.message }; 
+        username: formData.get('username'), // This will be saved in user metadata
+        full_name: formData.get('username')
+      }
+    }
   }
-  redirect('/dashboard');
+
+  try {
+    // Sign up the user
+    const { data: authData, error: authError } = await supabase.auth.signUp(data)
+
+    if (authError) {
+      console.error('Auth signup error:', authError)
+      return { error: authError.message }
+    }
+
+    if (authData.user) {
+      // Insert user data into your custom users table
+      const { error: dbError } = await supabase
+        .from('users') // Make sure this table exists
+        .insert([
+          {
+            id: authData.user.id, // Use the auth user ID
+            email: authData.user.email,
+            username: formData.get('username'),
+            created_at: new Date().toISOString(),
+          }
+        ])
+
+      if (dbError) {
+        console.error('Database insert error:', dbError)
+        // You might want to delete the auth user if database insert fails
+        // await supabase.auth.admin.deleteUser(authData.user.id)
+        return { error: 'Failed to create user profile. Please try again.' }
+      }
+    }
+
+    revalidatePath('/', 'layout')
+    redirect('/dashboard') // or wherever you want to redirect after signup
+
+  } catch (error) {
+    console.error('Unexpected signup error:', error)
+    return { error: 'An unexpected error occurred. Please try again.' }
+  }
 }
 
 export async function signIn(formData) {
-  const email = formData.get('email');
-  const password = formData.get('password');
+  const supabase = await createClient()
 
-  const supabase = await createClient(); 
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    console.error('Login error:', error.message);
-    return { error: error.message }; 
+  const data = {
+    email: formData.get('email'),
+    password: formData.get('password'),
   }
 
-  redirect('/dashboard');
-}
+  try {
+    const { error } = await supabase.auth.signInWithPassword(data)
 
-export async function signOut() {
-  const supabase = await createClient(); 
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    console.error('Logout error:', error.message);
-    return { error: error.message }; 
-  }
-
-  redirect('/auth/login'); 
-}
-
-// New server action to get user data
-export async function getUser() {
-  const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.error('Server action - Error fetching user:', error.message);
-    return { user: null, error: error.message };
-  }
-  return { user, error: null };
-}
-
-// utils/supabase/server.js (No changes needed here from previous update)
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-
-export async function createClient() { 
-  const cookieStore = cookies() 
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        get(name) {
-          return cookieStore.get(name)?.value
-        },
-        set(name, value, options) {
-          try {
-            cookieStore.set(name, value, options)
-          } catch (error) {
-            console.warn('Could not set cookie:', error);
-          }
-        },
-        remove(name, options) {
-          try {
-            cookieStore.set(name, '', { ...options, maxAge: 0 })
-          } catch (error) {
-            console.warn('Could not remove cookie:', error);
-          }
-        },
-      },
+    if (error) {
+      console.error('Sign in error:', error)
+      return { error: error.message }
     }
-  )
+
+    revalidatePath('/', 'layout')
+    redirect('/dashboard')
+
+  } catch (error) {
+    console.error('Unexpected sign in error:', error)
+    return { error: 'An unexpected error occurred. Please try again.' }
+  }
+}
+
+// ----------------- SIGN OUT -----------------
+export async function signOut() {
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/auth/login')
+}
+
+// ----------------- GET CURRENT USER -----------------
+export async function getUser() {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error) {
+    console.error('Server action - Error fetching user:', error.message)
+    return { user: null, error: error.message }
+  }
+  return { user, error: null }
 }
