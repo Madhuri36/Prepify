@@ -9,7 +9,7 @@ export async function GET(){
 }
 
 export async function POST(request){
-    const supabase = createClient();
+    const supabase = await createClient();
     const {type, role, level, techStack, amount, userid } = await request.json();
 
     try {
