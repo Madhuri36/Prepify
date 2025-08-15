@@ -26,7 +26,7 @@ export async function POST(request) {
         const body = await request.json();
         console.log('Incoming request body:', body);
 
-        const { type, role, level, techStack, amount } = body;
+        const { type, role, level, techStack, amount , userid} = body;
 
         // Check required fields individually
         const missingFields = [];
