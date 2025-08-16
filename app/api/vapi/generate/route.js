@@ -75,7 +75,7 @@ export async function POST(request) {
         const interview = {
             role,
             level,
-            tech_stack: Array.isArray(techStack) ? techStack : techStack.split(',').map(s => s.trim()),
+            techStack: Array.isArray(techStack) ? techStack : techStack.split(',').map(s => s.trim()),
             type,
             amount: parseInt(amount),
             questions: parsedQuestions,
