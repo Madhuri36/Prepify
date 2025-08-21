@@ -29,4 +29,9 @@ Built with Next.js for the user interface and backend logic, Supabase for authen
 
 and many more, including code architecture and reusability
 
+## <a name="preview">Preview</a>
+
+<img width="2219" height="1307" alt="image" src="https://github.com/user-attachments/assets/da37167c-96c7-40c8-83d1-8a47846c303e" />
+
+
 
