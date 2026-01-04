@@ -6,59 +6,46 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
 
-export async function signUp(formData) {
-  const supabase = await createClient()
+// app/actions/auth.js
 
-  // Get form data
-  const data = {
+export async function signUp(formData) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signUp({
     email: formData.get('email'),
     password: formData.get('password'),
     options: {
       data: {
-        username: formData.get('username'), // This will be saved in user metadata
-        full_name: formData.get('username')
-      }
+        username: formData.get('username'),
+        full_name: formData.get('username'),
+      },
+    },
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  if (data.user) {
+    const { error: dbError } = await supabase
+      .from('users')
+      .insert([
+        {
+          id: data.user.id,
+          email: data.user.email,
+          username: formData.get('username'),
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+    if (dbError) {
+      return { error: 'Failed to create user profile.' };
     }
   }
 
-  try {
-    // Sign up the user
-    const { data: authData, error: authError } = await supabase.auth.signUp(data)
-
-    if (authError) {
-      console.error('Auth signup error:', authError)
-      return { error: authError.message }
-    }
-
-    if (authData.user) {
-      // Insert user data into your custom users table
-      const { error: dbError } = await supabase
-        .from('users') // Make sure this table exists
-        .insert([
-          {
-            id: authData.user.id, // Use the auth user ID
-            email: authData.user.email,
-            username: formData.get('username'),
-            created_at: new Date().toISOString(),
-          }
-        ])
-
-      if (dbError) {
-        console.error('Database insert error:', dbError)
-        // You might want to delete the auth user if database insert fails
-        // await supabase.auth.admin.deleteUser(authData.user.id)
-        return { error: 'Failed to create user profile. Please try again.' }
-      }
-    }
-
-    revalidatePath('/dashboard', 'layout')
-    redirect('/dashboard') // or wherever you want to redirect after signup
-
-  } catch (error) {
-    console.error('Unexpected signup error:', error)
-    return { error: 'An unexpected error occurred. Please try again.' }
-  }
+  return { success: true };
 }
+
 
 // app/actions/auth.js
 export async function signIn(formData) {

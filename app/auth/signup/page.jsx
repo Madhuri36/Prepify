@@ -1,36 +1,38 @@
 "use client";
+
 import { z } from "zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
-import { signUp } from '@/app/actions/auth';
-import { useState } from 'react';
+import { signUp } from "@/app/actions/auth";
 
 const signupSchema = z.object({
-  username: z.string().min(2, { message: "Username must be at least 2 characters." }),
-  email: z.string().email({ message: "Enter a valid email." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  username: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
 });
 
 export default function SignupPage() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const router = useRouter();
 
   const onSubmit = async (values) => {
-    try {
-      setErrorMessage(null);
-      const formData = new FormData();
-      formData.append('username', values.username);
-      formData.append('email', values.email);
-      formData.append('password', values.password);
+    setErrorMessage(null);
 
-      const result = await signUp(formData);
+    const formData = new FormData();
+    formData.append("username", values.username);
+    formData.append("email", values.email);
+    formData.append("password", values.password);
 
-      if (result?.error) {
-        setErrorMessage(result.error);
-      }
-      // If no error, the server action will handle the redirect
-    } catch (error) {
-      console.error('Signup submission error:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+    const result = await signUp(formData);
+
+    if (result?.error) {
+      setErrorMessage(result.error);
+      return;
     }
+
+    // ✅ SAME AS LOGIN
+    router.replace("/dashboard");
   };
 
   return (
@@ -41,10 +43,11 @@ export default function SignupPage() {
         onSubmit={onSubmit}
         isSignup
       />
+
       {errorMessage && (
-        <div className="text-red-500 text-center mt-4 max-w-md mx-auto">
+        <p className="text-red-500 text-center mt-4">
           {errorMessage}
-        </div>
+        </p>
       )}
     </>
   );
