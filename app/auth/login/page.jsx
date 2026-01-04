@@ -1,34 +1,36 @@
-// app/auth/login/page.js
 "use client";
+
 import { z } from "zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
-import { signIn } from '@/app/actions/auth';
-import { useState } from 'react';
+import { signIn } from "@/app/actions/auth";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Enter a valid email." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const router = useRouter();
 
   const onSubmit = async (values) => {
-    try {
-      setErrorMessage(null);
-      const formData = new FormData();
-      formData.append('email', values.email);
-      formData.append('password', values.password);
+    setErrorMessage(null);
 
-      const result = await signIn(formData);
+    const formData = new FormData();
+    formData.append("email", values.email);
+    formData.append("password", values.password);
 
-      if (result?.error) {
-        setErrorMessage(result.error);
-      }
-    } catch (error) {
-      console.error('Login submission error:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+    const result = await signIn(formData);
+
+    if (result?.error) {
+      setErrorMessage(result.error);
+      return;
     }
+
+    // ✅ THIS IS REQUIRED
+    router.replace("/dashboard");
   };
 
   return (
@@ -38,10 +40,11 @@ export default function LoginPage() {
         defaultValues={{ email: "", password: "" }}
         onSubmit={onSubmit}
       />
+
       {errorMessage && (
-        <div className="text-red-500 text-center mt-4">
+        <p className="text-red-500 text-center mt-4">
           {errorMessage}
-        </div>
+        </p>
       )}
     </>
   );

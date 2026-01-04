@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
+
 export async function signUp(formData) {
   const supabase = await createClient()
 
@@ -50,7 +51,7 @@ export async function signUp(formData) {
       }
     }
 
-    revalidatePath('/', 'layout')
+    revalidatePath('/dashboard', 'layout')
     redirect('/dashboard') // or wherever you want to redirect after signup
 
   } catch (error) {
@@ -59,30 +60,22 @@ export async function signUp(formData) {
   }
 }
 
+// app/actions/auth.js
 export async function signIn(formData) {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
-  const data = {
-    email: formData.get('email'),
-    password: formData.get('password'),
+  const { error } = await supabase.auth.signInWithPassword({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (error) {
+    return { error: error.message };
   }
 
-  try {
-    const { error } = await supabase.auth.signInWithPassword(data)
-
-    if (error) {
-      console.error('Sign in error:', error)
-      return { error: error.message }
-    }
-
-    revalidatePath('/', 'layout')
-    redirect('/dashboard')
-
-  } catch (error) {
-    console.error('Unexpected sign in error:', error)
-    return { error: 'An unexpected error occurred. Please try again.' }
-  }
+  return { success: true };
 }
+
 
 // ----------------- SIGN OUT -----------------
 export async function signOut() {
@@ -108,4 +101,39 @@ export async function getUser() {
     return { user: null, error: error.message }
   }
   return { user, error: null }
+}
+
+
+// ----------------- GET INTERVIEWS BY USER ID -----------------
+export async function getInterviewByUserId(userId,limit=6) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("interviews")
+    .select("*")
+    .eq("user_id", userId)
+    .limit(limit)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching interviews:", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+// ----------------- GET LATEST INTERVIEWS (EXCEPT USER) -----------------
+export async function getLatestInterviews({ userId, limit = 20 }) {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("interviews")
+    .select("*")
+    .eq("finalized", true)
+    .neq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return data;
 }

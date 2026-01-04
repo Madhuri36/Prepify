@@ -76,7 +76,7 @@ export async function middleware(request) {
 
   if (user && isAuthRoute) {
     // If logged in and trying to access an auth route
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return response
