@@ -11,13 +11,17 @@ import { revalidatePath } from 'next/cache'
 export async function signUp(formData) {
   const supabase = await createClient();
 
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const username = formData.get("username");
+
   const { data, error } = await supabase.auth.signUp({
-    email: formData.get('email'),
-    password: formData.get('password'),
+    email,
+    password,
     options: {
       data: {
-        username: formData.get('username'),
-        full_name: formData.get('username'),
+        username,
+        full_name: username,
       },
     },
   });
@@ -28,23 +32,36 @@ export async function signUp(formData) {
 
   if (data.user) {
     const { error: dbError } = await supabase
-      .from('users')
-      .insert([
+      .from("users")
+      .upsert(
         {
           id: data.user.id,
           email: data.user.email,
-          username: formData.get('username'),
+          username,
           created_at: new Date().toISOString(),
         },
-      ]);
+        { onConflict: "id" }
+      );
 
     if (dbError) {
-      return { error: 'Failed to create user profile.' };
+      console.error("User profile upsert failed:", dbError.message);
     }
+  }
+
+  // Force session
+  const { error: signInError } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+  if (signInError) {
+    return { error: signInError.message };
   }
 
   return { success: true };
 }
+
 
 
 // app/actions/auth.js
