@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MessageCircle, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { vapi } from "@/lib/vapi.sdk";
+import { interviewer } from "@/constants";
 
 const CALL_STATUS = {
   INACTIVE: "INACTIVE",
@@ -17,7 +18,7 @@ export default function Agent({
   userId,
   type = "generate",
   questions = [],
-  interviewer,
+  interviewId
 }) {
   const router = useRouter();
 
@@ -99,10 +100,26 @@ export default function Agent({
     };
   }, []);
 
+  //  TODO
+  const handleGenerateFeedback = async (messages ) => {
+    console.log("Generate Feedback here.")
+    const {success,id}={success:true,id:"feedback-id"}
+    if(success && id){
+      router.push(`/interview/${interviewId}/feedback`);
+    } else{
+      console.log(("Error generating feedback."));
+      router.push("/dashboard");
+    }
+  }
+
   /* -------------------- REDIRECT -------------------- */
   useEffect(() => {
-    if (callStatus === CALL_STATUS.FINISHED) {
-      setTimeout(() => router.push("/dashboard"), 1000);
+    if(callStatus === CALL_STATUS.FINISHED){
+      if(type==="generate"){
+        setTimeout(() => router.push("/dashboard"), 1000);
+      } else{
+        handleGenerateFeedback(messages);
+      }
     }
   }, [callStatus, router]);
 
@@ -125,9 +142,16 @@ export default function Agent({
           }
         );
       } else {
+        let formattedQuestions="";
+        if(questions){
+          formattedQuestions = questions
+  .map((question) => `- ${question}`)
+  .join("\n");
+
+        }
         await vapi.start(interviewer, {
           variableValues: {
-            questions: questions.join("\n"),
+            questions: formattedQuestions
           },
         });
       }

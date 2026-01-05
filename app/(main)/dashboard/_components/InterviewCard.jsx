@@ -7,7 +7,7 @@ import DisplayTechIcons from "./DisplayTechIcons";
 import Image from "next/image";
 import { getRandomInterviewCover } from "@/lib/utils";
 
-function InterviewCard({ id, userId, role, type, techstack, createdAt }) {
+function InterviewCard({ id, userId, role, type, techStack, createdAt }) {
   const feedback = null;
 
   const normalizedType = /mixed/i.test(type) ? "Mixed" : type;
@@ -65,7 +65,7 @@ function InterviewCard({ id, userId, role, type, techstack, createdAt }) {
 
         {/* Tech icons and button */}
         <div className="flex flex-row justify-between items-center mt-6">
-          <DisplayTechIcons techStack={techstack} />
+          <DisplayTechIcons techStack={techStack} />
 
           <Button className="btn-primary">
             <Link

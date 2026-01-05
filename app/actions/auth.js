@@ -91,36 +91,3 @@ export async function getUser() {
 }
 
 
-// ----------------- GET INTERVIEWS BY USER ID -----------------
-export async function getInterviewByUserId(userId,limit=6) {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("interviews")
-    .select("*")
-    .eq("user_id", userId)
-    .limit(limit)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching interviews:", error.message);
-    return null;
-  }
-
-  return data;
-}
-
-// ----------------- GET LATEST INTERVIEWS (EXCEPT USER) -----------------
-export async function getLatestInterviews({ userId, limit = 20 }) {
-  const supabase = await createClient();
-
-  const { data } = await supabase
-    .from("interviews")
-    .select("*")
-    .eq("finalized", true)
-    .neq("user_id", userId)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  return data;
-}
