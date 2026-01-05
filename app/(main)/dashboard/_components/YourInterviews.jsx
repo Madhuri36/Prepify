@@ -18,7 +18,9 @@ async function YourInterviews() {
         <div className="mt-5 flex flex-wrap gap-6 max-lg:flex-col">
           {userInterviews.length > 0 ? (
             userInterviews.map((interview) => (
-              <InterviewCard key={interview.id} {...interview} />
+              <InterviewCard key={interview.id}
+                {...interview}
+                userId={user.id} />
             ))
           ) : (
             <p className="text-gray-500">You haven&apos;t conducted any interviews yet</p>
@@ -32,7 +34,9 @@ async function YourInterviews() {
         <div className="mt-5 flex flex-wrap gap-6 max-lg:flex-col">
           {latestInterviews.length > 0 ? (
             latestInterviews.map((interview) => (
-              <InterviewCard key={interview.id} {...interview} />
+              <InterviewCard key={interview.id}
+                {...interview}
+                userId={user.id} />
             ))
           ) : (
             <p className="text-gray-500">No interviews available right now</p>

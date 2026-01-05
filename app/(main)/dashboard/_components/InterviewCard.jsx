@@ -6,14 +6,22 @@ import React from "react";
 import DisplayTechIcons from "./DisplayTechIcons";
 import Image from "next/image";
 import { getRandomInterviewCover } from "@/lib/utils";
+import { getFeedbackByInterviewId } from "@/app/actions/general.action";
 
-function InterviewCard({ id, userId, role, type, techStack, createdAt }) {
-  const feedback = null;
+async function InterviewCard({ id, userId, role, type, techStack, createdAt }) {
+  const feedback =
+  userId && id
+    ? await getFeedbackByInterviewId({
+        interviewId: id,
+        userId,
+      })
+    : null;
+
 
   const normalizedType = /mixed/i.test(type) ? "Mixed" : type;
 
   const formattedDate = dayjs(
-    feedback?.createdAt || createdAt || Date.now()
+    feedback?.created_at || createdAt || Date.now()
   ).format("MMM DD, YYYY");
 
   return (
@@ -51,14 +59,14 @@ function InterviewCard({ id, userId, role, type, techStack, createdAt }) {
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-500" />
               <p className="text-sm">
-                {feedback?.totalScore || "---"}/100
+                {feedback?.total_score || "---"}/100
               </p>
             </div>
           </div>
 
           {/* Feedback / Placeholder */}
           <p className="line-clamp-2 mt-5 text-muted-text">
-            {feedback?.finalAssessment ||
+            {feedback?.final_assessment ||
               "You haven't taken the interview yet. Take it now to improve your skills!"}
           </p>
         </div>

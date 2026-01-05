@@ -4,7 +4,7 @@ import { getUser } from "@/app/actions/auth";
 import {
   getInterviewByUserId,
   getLatestInterviews,
-} from "@/app/actions/auth";
+} from "@/app/actions/general.action";
 
 async function AllInterviewsPage() {
   const { user } = await getUser();
@@ -21,7 +21,6 @@ async function AllInterviewsPage() {
 
   return (
     <section className="flex flex-col gap-8 mt-6">
-      {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold">All Interviews</h1>
         <p className="text-muted-text mt-1">
@@ -29,13 +28,13 @@ async function AllInterviewsPage() {
         </p>
       </div>
 
-      {/* INTERVIEW GRID */}
       <div className="flex flex-wrap gap-6 max-lg:flex-col w-full items-stretch">
         {allInterviews.length > 0 ? (
           allInterviews.map((interview) => (
             <InterviewCard
               key={interview.id}
               {...interview}
+              userId={user.id} // ✅ THIS FIXES IT
             />
           ))
         ) : (
