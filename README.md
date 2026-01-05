@@ -1,37 +1,108 @@
-## <a name="introduction">🤖 Introduction</a>
+# Prepify — AI-Driven Mock Interview Platform
 
-Built with Next.js for the user interface and backend logic, Supabase for authentication and data storage, styled with TailwindCSS and using Vapi's voice agents, Prepwise is a website project designed to help you learn integrating AI models with your apps. The platform offers a sleek and modern experience for job interview preparation.
+Prepify is a **production-ready, full-stack mock interview platform** that leverages **Large Language Models (LLMs)** and **real-time voice agents** to simulate realistic interview scenarios. The platform enables users to practice interviews interactively, receive structured AI-generated feedback, and track performance across sessions.
 
-## <a name="tech-stack">⚙️ Tech Stack</a>
+🔗 **Live Demo:** https://prepify-mock-interview.vercel.app  
 
-- Next.js
-- Supabase
-- Tailwind CSS
-- Vapi AI
-- shadcn/ui
-- Google Gemeni
+## Project Overview
+Interview preparation tools often lack realism, adaptability, and actionable evaluation. Prepify addresses these limitations by combining modern web architecture with AI-powered reasoning and voice interaction.
+The system is designed with a **scalable, modular architecture**, emphasizing clean separation of concerns, maintainability, and extensibility.
 
-## <a name="features">🔋 Features</a>
+## Core Capabilities
 
-**Authentication**: Sign Up and Sign In using password/email authentication handled by Firebase.
+### Authentication & User Management
+- Secure user authentication using **Supabase Auth**
+- Session-based access control
+- User-specific interview history and metadata persistence
 
-**Create Interviews**: Easily generate job interviews with help of Vapi voice assistants and Google Gemini.
+### AI-Powered Interview Engine
+- Role- and level-specific interview question generation
+- Context-aware follow-up questioning using LLMs
+- Configurable interview parameters (role, experience level, tech stack)
 
-**Get feedback from AI**: Take the interview with AI voice agent, and receive instant feedback based on your conversation.
+### Real-Time Voice Interaction
+- Natural, conversational interview experience via **Vapi AI**
+- Speech-to-text transcription and AI-driven responses
+- Event-driven handling of call lifecycle states
 
-**Modern UI/UX**: A sleek and user-friendly interface designed for a great experience.
+### Automated Feedback & Evaluation
+- AI-generated qualitative feedback on user responses
+- Identification of strengths, weaknesses, and improvement areas
+- Consistent evaluation logic across interview sessions
 
-**Interview Page**: Conduct AI-driven interviews with real-time feedback and detailed transcripts.
+### Interview History & Progress Tracking
+- Persistent storage of completed interviews
+- Structured interview records for future analytics
+- User dashboard for reviewing past sessions
 
-**Dashboard**: Manage and track all your interviews with easy navigation.
+## Technology Stack
+### Frontend
+- **Next.js (App Router)**
+- **React**
+- **Tailwind CSS**
+- **shadcn/ui**
 
-**Responsiveness**: Fully responsive design that works seamlessly across devices.
+### Backend & Services
+- **Next.js API Routes**
+- **Supabase** (Authentication & Database)
+- **Groq API** (LLM-powered interview question generation and evaluation)
+- **Vapi AI** (Voice agents and real-time conversation)
 
-and many more, including code architecture and reusability
-
-## <a name="preview">Preview</a>
-
-<img width="2219" height="1307" alt="image" src="https://github.com/user-attachments/assets/da37167c-96c7-40c8-83d1-8a47846c303e" />
+### Deployment
+- **Vercel**
 
 
+## System Architecture
+Prepify follows a layered architecture:
+- **Presentation Layer**  
+  Server and client components rendered via Next.js for optimal performance and SEO.
+- **Application Layer**  
+  API routes manage interview orchestration, AI service integration, and session handling.
+- **AI Layer**  
+  LLMs generate interview content and evaluate responses; voice agents manage real-time conversation.
+- **Data Layer**  
+  Supabase stores user profiles, interview sessions, feedback, and metadata.
+This architecture ensures **scalability, reliability, and ease of future enhancements**.
 
+## Setup & Installation
+### Prerequisites
+- Node.js ≥ 16
+- Supabase project credentials
+- Groq API key
+- Vapi AI API key
+- 
+### Installation
+```bash
+git clone https://github.com/Madhuri36/Prepify.git
+cd Prepify
+npm install
+```
+### Enviroment Configuration
+Create a .env.local file
+```bash
+# Supabase (public – safe for frontend)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_public_anon_key
+
+# Supabase (server-only – NEVER expose)
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Base URL
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# AI & Voice (server-only unless explicitly required)
+GROQ_API_KEY=your_groq_api_key
+NEXT_PUBLIC_VAPI_WEB_TOKEN=your_vapi_web_token
+NEXT_PUBLIC_VAPI_WORKFLOW_ID=your_vapi_workflow_id
+```
+### Run Locally
+```bash
+npm run dev
+```
+Application will be locally available at: 
+```bash
+http://localhost:3000
+```
+
+Contributions are welcome. <br>
+Please open an issue or submit a pull request for improvements or bug fixes.
