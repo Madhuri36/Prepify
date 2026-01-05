@@ -100,8 +100,13 @@
   --box-border: oklch(0.967 0.003 264.542);
   --primary: #4F39F6;
   --muted-text: oklch(0.551 0.027 264.364);
-
+  --cta-gradient: linear-gradient(
+    to bottom,
+    #dddfff,
+    #ffffff
+  );
 }
+
 
 .dark {
   --background: oklch(0.13 0.028 261.692);
@@ -135,6 +140,11 @@
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+  --cta-gradient: linear-gradient(
+    to bottom,
+    oklch(0.32 0.08 264),
+    oklch(0.18 0.03 264)
+  );
 }
 
 @layer base {
@@ -149,8 +159,7 @@
 @layer components {
   .dashboard .card-cta {
     @apply flex flex-row rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
-    background: linear-gradient(to bottom, #DDDFFF, #FFFFFF);
-    color: #1f1f1f;
+    background: var(--cta-gradient);
   }
 
   .card-border {
